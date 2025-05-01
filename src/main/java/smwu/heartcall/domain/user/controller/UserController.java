@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import smwu.heartcall.domain.user.dto.LinkRequestDto;
 import smwu.heartcall.domain.user.dto.SignUpRequestDto;
 import smwu.heartcall.domain.user.dto.WithdrawRequestDto;
 import smwu.heartcall.domain.user.service.UserService;
@@ -49,7 +51,18 @@ public class UserController {
                 .body(BasicResponse.of("회원 탈퇴 성공"));
     }
 
+    @PreAuthorize("@userPermissionChecker.isDependent(authentication)")
+    @PostMapping("/link")
+    public ResponseEntity<BasicResponse<Void>> linkGuardian(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody @Valid LinkRequestDto requestDto
+    ) {
+        userService.linkGuardian(userDetails.getUser(), requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("보호자 연결 성공"));
+    }
+
     // TODO : 비밀번호 변경 API
     // TODO : 피보호자 목록 조회 API
-    // TODO : 보호자-피보호자 연결 API
 }

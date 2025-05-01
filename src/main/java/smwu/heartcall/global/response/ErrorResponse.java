@@ -8,6 +8,10 @@ public class ErrorResponse<T> extends BasicResponse<T> {
         super(errorCode.getStatusCode(), errorCode.getMessage(), null);
     }
 
+    public ErrorResponse(ErrorCode errorCode, String message) {
+        super(errorCode.getStatusCode(), message, null);
+    }
+
     public ErrorResponse(ErrorCode errorCode, T data) {
         super(errorCode.getStatusCode(), errorCode.getMessage(), data);
     }
