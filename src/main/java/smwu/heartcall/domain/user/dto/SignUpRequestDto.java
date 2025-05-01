@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import smwu.heartcall.domain.user.entity.UserType;
+import smwu.heartcall.domain.user.enums.UserType;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

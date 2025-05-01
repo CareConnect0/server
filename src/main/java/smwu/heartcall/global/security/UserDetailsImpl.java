@@ -6,7 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import smwu.heartcall.domain.user.entity.User;
-import smwu.heartcall.domain.user.entity.UserRole;
+import smwu.heartcall.domain.user.enums.UserRole;
+import smwu.heartcall.domain.user.enums.UserType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getPassword() {
         return user.getPassword();
+    }
+
+    public UserType getUserType() {
+        return user.getUserType();
     }
 
     @Override

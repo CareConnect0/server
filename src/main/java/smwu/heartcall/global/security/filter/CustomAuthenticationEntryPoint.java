@@ -8,6 +8,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import smwu.heartcall.global.exception.CustomSecurityException;
 import smwu.heartcall.global.exception.errorCode.CommonErrorCode;
+import smwu.heartcall.global.exception.errorCode.ErrorCode;
 import smwu.heartcall.global.util.ResponseUtil;
 
 import java.io.IOException;
@@ -24,6 +25,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             return;
         }
 
-        ResponseUtil.writeJsonErrorResponse(response, CommonErrorCode.INTERNAL_SERVER_ERROR);
+        log.warn("인증 실패: {}", authException.getMessage(), authException);
+
+        // 인증 관련 예외 메시지를 담아서 클라이언트에 반환
+        ErrorCode errorCode = CommonErrorCode.UNAUTHORIZED; // 401 Unauthorized
+        String errorMessage = authException.getMessage();
+
+        ResponseUtil.writeJsonErrorResponse(response, errorCode, errorMessage);
     }
 }

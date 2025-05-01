@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import smwu.heartcall.domain.user.entity.User;
-import smwu.heartcall.domain.user.entity.UserStatus;
+import smwu.heartcall.domain.user.enums.UserStatus;
 import smwu.heartcall.global.exception.errorCode.SecurityErrorCode;
 import smwu.heartcall.global.jwt.JwtProvider;
 import smwu.heartcall.global.jwt.RefreshTokenService;

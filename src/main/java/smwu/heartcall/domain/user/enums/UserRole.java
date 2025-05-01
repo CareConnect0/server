@@ -1,4 +1,4 @@
-package smwu.heartcall.domain.user.entity;
+package smwu.heartcall.domain.user.enums;
 
 import lombok.Getter;
 

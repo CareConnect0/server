@@ -31,7 +31,11 @@ public class ResponseUtil {
      */
     public static void writeJsonErrorResponse(HttpServletResponse response, ErrorCode errorCode)
             throws IOException {
-        ErrorResponse responseMessage = new ErrorResponse(errorCode);
+        writeJsonErrorResponse(response, errorCode, errorCode.getMessage());
+    }
+
+    public static void writeJsonErrorResponse(HttpServletResponse response, ErrorCode errorCode, String customMessage) throws IOException {
+        ErrorResponse responseMessage = new ErrorResponse(errorCode, customMessage);
 
         String jsonResponse = objectMapper.writeValueAsString(responseMessage);
 

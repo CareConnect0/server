@@ -2,6 +2,9 @@ package smwu.heartcall.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import smwu.heartcall.domain.user.enums.UserRole;
+import smwu.heartcall.domain.user.enums.UserStatus;
+import smwu.heartcall.domain.user.enums.UserType;
 import smwu.heartcall.global.entity.BaseTimeEntity;
 
 @Entity
