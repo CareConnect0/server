@@ -5,6 +5,7 @@ import lombok.*;
 import smwu.heartcall.global.entity.BaseTimeEntity;
 
 @Entity
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

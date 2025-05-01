@@ -7,12 +7,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import smwu.heartcall.domain.user.dto.DependentDetailResponseDto;
 import smwu.heartcall.domain.user.dto.LinkRequestDto;
 import smwu.heartcall.domain.user.dto.SignUpRequestDto;
 import smwu.heartcall.domain.user.dto.WithdrawRequestDto;
 import smwu.heartcall.domain.user.service.UserService;
 import smwu.heartcall.global.response.BasicResponse;
 import smwu.heartcall.global.security.UserDetailsImpl;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,6 +66,15 @@ public class UserController {
                 .body(BasicResponse.of("보호자 연결 성공"));
     }
 
+    @PreAuthorize("@userPermissionChecker.isGuardian(authentication)")
+    @GetMapping("/dependent-list")
+    public ResponseEntity<BasicResponse<List<DependentDetailResponseDto>>> getDependentList(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        List<DependentDetailResponseDto> responseDtos = userService.getDependentList(userDetails.getUser());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("피보호자 조회 완료", responseDtos));
+    }
     // TODO : 비밀번호 변경 API
-    // TODO : 피보호자 목록 조회 API
 }

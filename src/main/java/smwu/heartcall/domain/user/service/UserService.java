@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smwu.heartcall.domain.user.dto.DependentDetailResponseDto;
 import smwu.heartcall.domain.user.dto.LinkRequestDto;
 import smwu.heartcall.domain.user.dto.SignUpRequestDto;
 import smwu.heartcall.domain.user.dto.WithdrawRequestDto;
@@ -17,6 +18,9 @@ import smwu.heartcall.domain.user.repository.UserRepository;
 import smwu.heartcall.global.exception.CustomException;
 import smwu.heartcall.global.exception.errorCode.UserErrorCode;
 import smwu.heartcall.global.jwt.RefreshTokenService;
+
+import javax.management.relation.Relation;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +80,11 @@ public class UserService {
                 .build();
 
         relationRepository.save(relation);
+    }
+
+    public List<DependentDetailResponseDto> getDependentList(User guardian) {
+        List<DependentRelation> relations = relationRepository.findByGuardian(guardian);
+        return relations.stream().map(DependentDetailResponseDto::of).toList();
     }
 
     private void checkPasswordMatch(String realPassword, String inputPassword) {
