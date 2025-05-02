@@ -9,6 +9,8 @@ import smwu.heartcall.domain.schedule.dto.ScheduleDetailResponseDto;
 import smwu.heartcall.domain.schedule.entity.Schedule;
 import smwu.heartcall.domain.schedule.repository.ScheduleRepository;
 import smwu.heartcall.domain.user.entity.User;
+import smwu.heartcall.global.fcm.repository.FcmRepository;
+import smwu.heartcall.global.fcm.service.FcmService;
 import smwu.heartcall.global.util.LocalDatetimeUtil;
 
 import java.time.LocalDate;
@@ -21,6 +23,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final FcmService fcmService;
+    private final FcmRepository fcmRepository;
 
     @Transactional
     public void createSchedule(User user, CreateScheduleRequestDto requestDto) {
@@ -31,6 +35,8 @@ public class ScheduleService {
                 .build();
 
         scheduleRepository.save(schedule);
+        String token = fcmRepository.findByUserOrElseThrow(user).getToken();
+        fcmService.sendNotification(token, "일정 알림", "새로운 일정이 등록되었습니다.");
     }
 
     public List<ScheduleDetailResponseDto> getSchedules(User user, LocalDate date) {
