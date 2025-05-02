@@ -5,14 +5,14 @@ import smwu.heartcall.global.exception.errorCode.ErrorCode;
 public class ErrorResponse<T> extends BasicResponse<T> {
 
     public ErrorResponse(ErrorCode errorCode) {
-        super(errorCode.getStatusCode(), errorCode.getMessage(), null);
+        super(false, errorCode.getStatusCode(), errorCode.getMessage(), null);
     }
 
     public ErrorResponse(ErrorCode errorCode, String message) {
-        super(errorCode.getStatusCode(), message, null);
+        super(false, errorCode.getStatusCode(), message, null);
     }
 
     public ErrorResponse(ErrorCode errorCode, T data) {
-        super(errorCode.getStatusCode(), errorCode.getMessage(), data);
+        super(false, errorCode.getStatusCode(), errorCode.getMessage(), data);
     }
 }
