@@ -70,7 +70,7 @@ public class UserService {
     public void linkGuardian(User dependent, LinkRequestDto requestDto) {
         checkAlreadyLinkedDependent(dependent);
 
-        User guardian = userRepository.findByUsernameOrElseThrow(requestDto.getGuardianUsername());
+        User guardian = userRepository.findByUsernameAndNameOrElseThrow(requestDto.getGuardianUsername(), requestDto.getGuardianName());
 
         validateUserIsGuardian(guardian);
 

@@ -25,7 +25,6 @@ public class AuthController {
 
     // TODO : 휴대폰 인증번호 발급 API
     // TODO : 휴대폰 인증번호 검증 API
-    // TODO : 로그아웃 API
 
     @PatchMapping("/logout")
     public ResponseEntity<BasicResponse<Void>> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
