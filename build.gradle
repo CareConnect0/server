@@ -24,6 +24,10 @@ repositories {
 }
 
 dependencies {
+    // coolSMS
+    implementation 'net.nurigo:sdk:4.3.0'
+
+    // firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
 
     // JWT

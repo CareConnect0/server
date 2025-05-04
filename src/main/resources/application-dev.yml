@@ -19,3 +19,9 @@ spring:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+
+coolsms:
+  api-key: ${SMS_API_KEY}
+  secret-key: ${SMS_SECRET_KEY}
+  provider: ${SMS_PROVIDER}
+  sender: ${SMS_SENDER}

@@ -23,9 +23,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(BasicResponse.of("Token 재발급이 완료되었습니다."));
     }
 
-    // TODO : 휴대폰 인증번호 발급 API
-    // TODO : 휴대폰 인증번호 검증 API
-
     @PatchMapping("/logout")
     public ResponseEntity<BasicResponse<Void>> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         authService.logout(userDetails.getUser());
