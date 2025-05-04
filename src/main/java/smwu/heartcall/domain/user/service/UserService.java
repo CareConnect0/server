@@ -19,7 +19,6 @@ import smwu.heartcall.global.exception.CustomException;
 import smwu.heartcall.global.exception.errorCode.UserErrorCode;
 import smwu.heartcall.global.jwt.RefreshTokenService;
 
-import javax.management.relation.Relation;
 import java.util.List;
 
 @Service
