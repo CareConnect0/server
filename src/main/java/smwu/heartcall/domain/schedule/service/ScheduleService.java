@@ -35,14 +35,14 @@ public class ScheduleService {
                 .build();
 
         scheduleRepository.save(schedule);
-        String token = fcmRepository.findByUserOrElseThrow(user).getToken();
-        fcmService.sendNotification(token, "일정 알림", "새로운 일정이 등록되었습니다.");
+//        String token = fcmRepository.findByUserOrElseThrow(user).getToken();
+//        fcmService.sendNotification(token, "일정 알림", "새로운 일정이 등록되었습니다.");
     }
 
     public List<ScheduleDetailResponseDto> getSchedules(User user, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-        List<Schedule> schedules = scheduleRepository.findAllByUserAndStartTimeBetween(user, startOfDay, endOfDay);
+        List<Schedule> schedules = scheduleRepository.findSchedulesOfDay(user, startOfDay, endOfDay);
         return schedules.stream().map(ScheduleDetailResponseDto::of).toList();
     }
 

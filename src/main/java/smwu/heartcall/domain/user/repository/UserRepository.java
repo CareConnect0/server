@@ -8,9 +8,15 @@ import smwu.heartcall.global.exception.errorCode.UserErrorCode;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findUserById(Long id);
     Optional<User> findByUsername(String username);
     Optional<User> findByUsernameAndName(String username, String name);
     Boolean existsByUsername(String username);
+
+    default User findByIdOrElseThrow(Long id) {
+        return findUserById(id).orElseThrow(()
+                -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+    }
 
     default User findByUsernameOrElseThrow(String username) {
         return findByUsername(username).orElseThrow(()

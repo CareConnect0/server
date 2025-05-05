@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ScheduleErrorCode implements ErrorCode {
-    SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "일정을 찾을 수 없습니다."),
+public enum RelationErrorCode implements ErrorCode {
+    NOT_A_GUARDIAN_OF_USER(HttpStatus.BAD_REQUEST.value(), "해당 피보호자에 대한 권한이 없습니다."),
     ;
 
     private final int statusCode;
