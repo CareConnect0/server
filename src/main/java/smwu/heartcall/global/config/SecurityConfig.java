@@ -21,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import smwu.heartcall.global.jwt.JwtProvider;
 import smwu.heartcall.global.jwt.RefreshTokenService;
 import smwu.heartcall.global.security.UserDetailsServiceImpl;
+import smwu.heartcall.global.security.filter.CustomAccessDeniedHandler;
 import smwu.heartcall.global.security.filter.CustomAuthenticationEntryPoint;
 import smwu.heartcall.global.security.filter.JwtAuthorizationFilter;
 import smwu.heartcall.global.security.filter.LoginFilter;
@@ -36,6 +37,7 @@ public class SecurityConfig {
     private final RefreshTokenService refreshTokenService;
     private final UserDetailsServiceImpl userDetailsService;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
@@ -97,7 +99,11 @@ public class SecurityConfig {
         http.addFilterBefore(authorizationFilter(), LoginFilter.class);
         http.addFilterBefore(loginFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));
+        http.exceptionHandling(exceptionHandling ->
+                exceptionHandling
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+        );
 
         return http.build();
     }
