@@ -50,6 +50,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+bootJar {
+    archiveFileName = 'heartcall-project.jar'
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

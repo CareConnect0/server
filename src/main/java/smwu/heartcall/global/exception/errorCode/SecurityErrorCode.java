@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum SecurityErrorCode implements ErrorCode {
+    USER_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 기능에 대한 권한이 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "회원을 찾을 수 없습니다."),
     LOGIN_FAILED(HttpStatus.BAD_REQUEST.value(), "로그인에 실패했습니다."),
     WITHDRAWAL_USER(HttpStatus.BAD_REQUEST.value(), "탈퇴한 회원입니다."),

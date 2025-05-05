@@ -1,6 +1,7 @@
 package smwu.heartcall.domain.schedule.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,7 +9,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CreateScheduleRequestDto {
+public class GuardianCreateScheduleRequestDto {
+    @NotNull
+    private Long dependentId;
+
     @NotBlank
     private String content;
 

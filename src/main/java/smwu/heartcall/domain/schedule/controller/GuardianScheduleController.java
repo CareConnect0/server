@@ -8,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import smwu.heartcall.domain.schedule.dto.CreateScheduleRequestDto;
-import smwu.heartcall.domain.schedule.dto.EditScheduleRequestDto;
-import smwu.heartcall.domain.schedule.dto.ScheduleDetailResponseDto;
-import smwu.heartcall.domain.schedule.service.ScheduleService;
+import smwu.heartcall.domain.schedule.dto.*;
+import smwu.heartcall.domain.schedule.service.GuardianScheduleService;
 import smwu.heartcall.global.response.BasicResponse;
 import smwu.heartcall.global.security.UserDetailsImpl;
 
@@ -20,15 +18,15 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/schedules")
-@PreAuthorize("@userPermissionChecker.isDependent(authentication)")
-public class ScheduleController {
-    private final ScheduleService scheduleService;
+@RequestMapping("/api/guardian/schedules")
+@PreAuthorize("@userPermissionChecker.isGuardian(authentication)")
+public class GuardianScheduleController {
+    private final GuardianScheduleService scheduleService;
 
     @PostMapping
     public ResponseEntity<BasicResponse<Void>> createSchedule(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody @Valid CreateScheduleRequestDto requestDto
+            @RequestBody @Valid GuardianCreateScheduleRequestDto requestDto
     ) {
         scheduleService.createSchedule(userDetails.getUser(), requestDto);
         return ResponseEntity
@@ -39,9 +37,10 @@ public class ScheduleController {
     @GetMapping
     public ResponseEntity<BasicResponse<List<ScheduleDetailResponseDto>>> getSchedules(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam("dependentId") Long dependentId,
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
-        List<ScheduleDetailResponseDto> responseDtoList = scheduleService.getSchedules(userDetails.getUser(), date);
+        List<ScheduleDetailResponseDto> responseDtoList = scheduleService.getSchedules(userDetails.getUser(), dependentId, date);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(BasicResponse.of("일정 조회 완료", responseDtoList));
@@ -51,7 +50,7 @@ public class ScheduleController {
     public ResponseEntity<BasicResponse<ScheduleDetailResponseDto>> editSchedule(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long scheduleId,
-            @RequestBody @Valid EditScheduleRequestDto requestDto
+            @RequestBody @Valid GuardianEditScheduleRequestDto requestDto
     ) {
         ScheduleDetailResponseDto responseDto = scheduleService.editSchedule(userDetails.getUser(), scheduleId, requestDto);
         return ResponseEntity
@@ -62,9 +61,10 @@ public class ScheduleController {
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<BasicResponse<Void>> deleteSchedule(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long scheduleId
+            @PathVariable Long scheduleId,
+            @RequestParam("dependentId") Long dependentId
     ) {
-        scheduleService.deleteSchedule(userDetails.getUser(), scheduleId);
+        scheduleService.deleteSchedule(userDetails.getUser(), dependentId, scheduleId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(BasicResponse.of("일정 삭제 완료"));
