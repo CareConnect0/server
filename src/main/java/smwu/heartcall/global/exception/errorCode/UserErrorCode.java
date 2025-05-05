@@ -11,6 +11,7 @@ public enum UserErrorCode implements ErrorCode{
     DUPLICATE_USERNAME(HttpStatus.BAD_REQUEST.value(), "중복된 아이디입니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST.value(), "비밀번호가 일치하지 않습니다."),
     DEPENDENT_USER_ALREADY_LINKED(HttpStatus.BAD_REQUEST.value(), "이미 보호자와 연결된 피보호자입니다."),
+    NO_MATCHING_USER(HttpStatus.BAD_REQUEST.value(), "일치하는 유저를 찾을 수 없습니다."),
     USER_IS_NOT_GUARDIAN(HttpStatus.BAD_REQUEST.value(), "보호자 계정이 아닙니다.")
     ;
 

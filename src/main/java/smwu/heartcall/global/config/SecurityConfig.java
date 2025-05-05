@@ -90,6 +90,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users/check-username").permitAll() //
                 .requestMatchers(HttpMethod.POST, "/api/users/signup").permitAll() // 회원가입 접근 허용
                 .requestMatchers(HttpMethod.POST, "/api/auth/reissue").permitAll()
+                .requestMatchers("/api/auth/verification-code").permitAll()
                 .anyRequest().authenticated()
         );
 
