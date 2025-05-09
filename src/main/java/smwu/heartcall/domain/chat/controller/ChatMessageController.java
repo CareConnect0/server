@@ -14,7 +14,7 @@ import smwu.heartcall.domain.chat.entity.ChatMessage;
 import smwu.heartcall.domain.chat.service.ChatMessageService;
 import smwu.heartcall.global.security.UserDetailsImpl;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ChatMessageController {
     private final ChatMessageService chatMessageService;
