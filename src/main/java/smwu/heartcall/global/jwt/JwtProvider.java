@@ -120,6 +120,19 @@ public class JwtProvider {
         return false;
     }
 
+    public boolean validateTokenInternal(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.error("Expired JWT token, 만료된 JWT token 입니다.");
+        }
+        return false;
+    }
+
     /**
      * Access Token 만료 여부 검사
      *
