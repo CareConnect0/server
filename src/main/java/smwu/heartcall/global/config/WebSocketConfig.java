@@ -18,24 +18,22 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // 클라이언트가 구독할 주소 prefix
-        config.enableSimpleBroker("/sub"); // 메시지 구독
+        config.enableSimpleBroker("/sub"); // 메시지 구독 주소
         config.setApplicationDestinationPrefixes("/pub"); // 메시지 전송 주소
 
-        // /app/rooms/{roomId}/messages 로 메시지를 보냄
-        // /queue/chats/rooms/{roomId} 로 메시지가 전달됨
+        // /pub/chats/rooms/{roomId}/messages 로 메시지를 보냄
+        // /sub/chats/rooms/{roomId} 로 메시지가 전달됨
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*"); // 프론트 도메인
-        // localhost:port/ws 으로 연결 요청
         // /ws로 도착하는 것은 stomp 통신으로 인식
     }
 
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(interceptor);
-    }
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(interceptor);
+//    }
 }

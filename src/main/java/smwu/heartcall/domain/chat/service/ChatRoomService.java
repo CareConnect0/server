@@ -30,7 +30,7 @@ public class ChatRoomService {
         return relations.stream()
                 .map(relation -> {
                     User target;
-                    if (relation.getGuardian().equals(user)) {
+                    if (relation.getGuardian().getId().equals(user.getId())) {
                         target = relation.getDependent();
                     } else {
                         target = relation.getGuardian();

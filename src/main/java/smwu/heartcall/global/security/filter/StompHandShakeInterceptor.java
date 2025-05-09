@@ -11,9 +11,12 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import smwu.heartcall.global.exception.CustomSecurityException;
+import smwu.heartcall.global.exception.errorCode.SecurityErrorCode;
 import smwu.heartcall.global.jwt.JwtProvider;
 import smwu.heartcall.global.jwt.RefreshTokenService;
 import smwu.heartcall.global.security.UserDetailsServiceImpl;
@@ -33,7 +36,7 @@ public class StompHandShakeInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-        if(StompCommand.CONNECTED.equals(accessor.getCommand())) {
+//        if(StompCommand.CONNECTED.equals(accessor.getCommand())) {
             List<String> authorization = accessor.getNativeHeader(JwtProvider.AUTHORIZATION_HEADER);
             if (authorization != null && !authorization.isEmpty()) {
                 String accessToken = authorization.get(0).substring(BEARER_PREFIX.length());
@@ -42,24 +45,23 @@ public class StompHandShakeInterceptor implements ChannelInterceptor {
                     String username = jwtProvider.getUserInfoFromClaims(accessToken).getSubject();
 
                     if (refreshTokenService.isRefreshTokenPresent(username)) {
-                        setAuthentication(username);
+                        setAuthentication(username, accessor);
                     } else {
-//                        throw new CustomSecurityException(SecurityErrorCode.INVALID_ACCESS_TOKEN);
-                        return null;
+                        throw new CustomSecurityException(SecurityErrorCode.INVALID_ACCESS_TOKEN);
                     }
                 } else {
-//                    throw new CustomSecurityException(SecurityErrorCode.INVALID_ACCESS_TOKEN);
-                    return null;
+                    throw new CustomSecurityException(SecurityErrorCode.INVALID_ACCESS_TOKEN);
                 }
             }
-        }
+//        }
         return message;
     }
 
-    private void setAuthentication(String username) {
+    private void setAuthentication(String username, StompHeaderAccessor accessor) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        var authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        accessor.setUser(authentication);
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
     }

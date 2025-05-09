@@ -26,6 +26,7 @@ import smwu.heartcall.global.security.filter.CustomAuthenticationEntryPoint;
 import smwu.heartcall.global.security.filter.JwtAuthorizationFilter;
 import smwu.heartcall.global.security.filter.LoginFilter;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -65,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("https://easy-terview.site"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
@@ -93,6 +94,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/users/signup").permitAll() // 회원가입 접근 허용
                 .requestMatchers(HttpMethod.POST, "/api/auth/reissue").permitAll()
                 .requestMatchers("/api/auth/verification-code").permitAll()
+                .requestMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
         );
 

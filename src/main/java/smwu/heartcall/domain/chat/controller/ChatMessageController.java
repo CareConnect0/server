@@ -12,22 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 import smwu.heartcall.domain.chat.dto.SaveMessageRequestDto;
 import smwu.heartcall.domain.chat.entity.ChatMessage;
 import smwu.heartcall.domain.chat.service.ChatMessageService;
+import smwu.heartcall.global.security.UserDetailsImpl;
 
 @Controller
 @RequiredArgsConstructor
-//@RequestMapping("/api/chats/")
 public class ChatMessageController {
     private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/rooms/{roomId}/messages") // /app/chat/send
+    @MessageMapping("/chats/rooms/{roomId}/messages")
     public void sendMessage(
-            @AuthenticationPrincipal
-            @DestinationVariable Long roomId,
+//            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @DestinationVariable final Long roomId,
             SaveMessageRequestDto requestDto
     ) {
         chatMessageService.sendMessage(roomId, requestDto);
-        // 클라이언트는 /queue/chat/{roomId} 를 구독하고 메시지를 받는다.
     }
-
-
 }
