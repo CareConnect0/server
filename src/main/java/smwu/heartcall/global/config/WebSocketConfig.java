@@ -1,0 +1,41 @@
+package smwu.heartcall.global.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import smwu.heartcall.global.security.filter.StompHandShakeInterceptor;
+
+@Configuration
+@EnableWebSocketMessageBroker
+@RequiredArgsConstructor
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    private final StompHandShakeInterceptor interceptor;
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        // 클라이언트가 구독할 주소 prefix
+        config.enableSimpleBroker("/sub"); // 메시지 구독
+        config.setApplicationDestinationPrefixes("/pub"); // 메시지 전송 주소
+
+        // /app/rooms/{roomId}/messages 로 메시지를 보냄
+        // /queue/chats/rooms/{roomId} 로 메시지가 전달됨
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("*"); // 프론트 도메인
+        // localhost:port/ws 으로 연결 요청
+        // /ws로 도착하는 것은 stomp 통신으로 인식
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(interceptor);
+    }
+}
