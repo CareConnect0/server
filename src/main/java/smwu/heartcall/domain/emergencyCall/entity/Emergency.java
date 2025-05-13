@@ -10,14 +10,25 @@ import smwu.heartcall.global.entity.BaseTimeEntity;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class EmergencyCall extends BaseTimeEntity {
+public class Emergency extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dependent_id", nullable = false)
     private User dependent;
 
-    private boolean isSolved = false;
+    @Column(length = 200)
+    private String keyword;
+
+    @Column(nullable = false, length = 500)
+    private String audioUrl;
+
+    private boolean isChecked = false;
+    private boolean isDeleted = false;
+
+    public void check() {
+        this.isChecked = true;
+    }
 }

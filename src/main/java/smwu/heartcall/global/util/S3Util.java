@@ -26,7 +26,7 @@ public abstract class S3Util {
      * 파일 확장자 검사
      */
     public static String getValidateAudioExtension(String fileName) {
-        List<String> validExtensionList = Arrays.asList("wav", "flac", "mp3");
+        List<String> validExtensionList = Arrays.asList("wav", "flac", "mp3", "m4a");
 
         int extensionIndex = fileName.lastIndexOf(".");
 
