@@ -1,4 +1,4 @@
-package smwu.heartcall.domain.emergencyCall.controller;
+package smwu.heartcall.domain.emergency.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,11 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import smwu.heartcall.domain.emergencyCall.dto.CallEmergencyRequestDto;
-import smwu.heartcall.domain.emergencyCall.dto.EmergencyAudioUrlResponseDto;
-import smwu.heartcall.domain.emergencyCall.dto.EmergencyDetailResponseDto;
-import smwu.heartcall.domain.emergencyCall.dto.GetEmergencyResponseDto;
-import smwu.heartcall.domain.emergencyCall.service.EmergencyService;
+import smwu.heartcall.domain.emergency.dto.CallEmergencyRequestDto;
+import smwu.heartcall.domain.emergency.dto.EmergencyAudioUrlResponseDto;
+import smwu.heartcall.domain.emergency.dto.EmergencyDetailResponseDto;
+import smwu.heartcall.domain.emergency.dto.GetEmergencyResponseDto;
+import smwu.heartcall.domain.emergency.service.EmergencyService;
 import smwu.heartcall.global.response.BasicResponse;
 import smwu.heartcall.global.security.UserDetailsImpl;
 

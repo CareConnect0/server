@@ -1,4 +1,4 @@
-package smwu.heartcall.domain.emergencyCall.dto;
+package smwu.heartcall.domain.emergency.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

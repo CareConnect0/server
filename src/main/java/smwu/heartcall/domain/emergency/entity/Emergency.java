@@ -1,4 +1,4 @@
-package smwu.heartcall.domain.emergencyCall.entity;
+package smwu.heartcall.domain.emergency.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

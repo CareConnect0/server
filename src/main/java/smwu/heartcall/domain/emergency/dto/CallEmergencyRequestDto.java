@@ -1,4 +1,4 @@
-package smwu.heartcall.domain.emergencyCall.dto;
+package smwu.heartcall.domain.emergency.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;

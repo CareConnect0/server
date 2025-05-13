@@ -1,8 +1,8 @@
-package smwu.heartcall.domain.emergencyCall.dto;
+package smwu.heartcall.domain.emergency.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import smwu.heartcall.domain.emergencyCall.entity.Emergency;
+import smwu.heartcall.domain.emergency.entity.Emergency;
 
 import java.time.LocalDateTime;
 

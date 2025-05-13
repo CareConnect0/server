@@ -1,8 +1,8 @@
-package smwu.heartcall.domain.emergencyCall.repository;
+package smwu.heartcall.domain.emergency.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import smwu.heartcall.domain.emergencyCall.entity.Emergency;
+import smwu.heartcall.domain.emergency.entity.Emergency;
 import smwu.heartcall.domain.user.entity.User;
 import smwu.heartcall.global.exception.CustomException;
 import smwu.heartcall.global.exception.errorCode.EmergencyErrorCode;
