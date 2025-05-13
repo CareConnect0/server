@@ -24,6 +24,9 @@ repositories {
 }
 
 dependencies {
+    // AWS
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.0'
+
     // websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.webjars:sockjs-client:1.5.1'
