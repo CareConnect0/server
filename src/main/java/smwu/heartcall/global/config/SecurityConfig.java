@@ -94,6 +94,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/users/signup").permitAll() // 회원가입 접근 허용
                 .requestMatchers(HttpMethod.POST, "/api/auth/reissue").permitAll()
                 .requestMatchers("/api/auth/verification-code").permitAll()
+                .requestMatchers("/api/assistant/response").permitAll()
                 .requestMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
         );

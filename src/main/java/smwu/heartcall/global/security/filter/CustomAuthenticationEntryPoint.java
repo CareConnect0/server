@@ -28,7 +28,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         log.warn("인증 실패: {}", authException.getMessage(), authException);
 
         // 인증 관련 예외 메시지를 담아서 클라이언트에 반환
-        ErrorCode errorCode = CommonErrorCode.UNAUTHORIZED; // 401 Unauthorized
+        ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
         String errorMessage = authException.getMessage();
 
         ResponseUtil.writeJsonErrorResponse(response, errorCode, errorMessage);
