@@ -16,6 +16,6 @@ public class AiAssistantRoom extends BaseTimeEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "dependent_id", nullable = false)
-    private User dependent;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

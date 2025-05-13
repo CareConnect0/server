@@ -3,13 +3,14 @@ package smwu.heartcall.domain.aiAssistant.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import smwu.heartcall.domain.aiAssistant.enums.SenderType;
+import smwu.heartcall.global.entity.BaseTimeEntity;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class AiAssistantMessage {
+public class AiAssistantMessage extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
