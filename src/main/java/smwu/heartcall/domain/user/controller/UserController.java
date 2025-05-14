@@ -85,4 +85,14 @@ public class UserController {
     }
 
     // TODO : 비밀번호 변경 API
+    @PatchMapping("/password")
+    public ResponseEntity<BasicResponse<Void>> editPassword(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody @Valid EditPasswordRequestDto requestDto
+    ) {
+        userService.editPassword(userDetails.getUser(), requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("비밀번호 변경 성공"));
+    }
 }

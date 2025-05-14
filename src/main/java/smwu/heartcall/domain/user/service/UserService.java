@@ -87,10 +87,20 @@ public class UserService {
         return UserInfoResponseDto.of(user);
     }
 
-    private void checkPasswordMatch(String realPassword, String inputPassword) {
-        if(!passwordEncoder.matches(inputPassword, realPassword)) { // 인코딩 이전 값, 인코딩 이후 값
-            throw new CustomException(UserErrorCode.PASSWORD_MISMATCH);
-        }
+    @Transactional
+    public void editPassword(User user, EditPasswordRequestDto requestDto) {
+        String realPassword = user.getPassword();
+        String inputPassword = requestDto.getCurrentPassword();
+        String newPassword = requestDto.getNewPassword();
+
+        checkPasswordMatch(realPassword, inputPassword);
+        validatePasswordNotReused(inputPassword, newPassword);
+
+        String newEncodedPassword = passwordEncoder.encode(newPassword);
+        user.editPassword(newEncodedPassword);
+        userRepository.save(user);
+
+        refreshTokenService.deleteRefreshTokenInfo(user.getUsername());
     }
 
     private void checkAlreadyLinkedDependent(User dependent) {
@@ -98,10 +108,21 @@ public class UserService {
             throw new CustomException(UserErrorCode.DEPENDENT_USER_ALREADY_LINKED);
         }
     }
-
     private void validateUserIsGuardian(User guardian) {
         if(!guardian.getUserType().equals(UserType.GUARDIAN)) {
             throw new CustomException(UserErrorCode.USER_IS_NOT_GUARDIAN);
+        }
+    }
+
+    private void checkPasswordMatch(String realPassword, String inputPassword) {
+        if(!passwordEncoder.matches(inputPassword, realPassword)) { // 인코딩 이전 값, 인코딩 이후 값
+            throw new CustomException(UserErrorCode.PASSWORD_MISMATCH);
+        }
+    }
+
+    private void validatePasswordNotReused(String currentPassword, String newPassword) {
+        if(currentPassword.equals(newPassword)) {
+            throw new CustomException(UserErrorCode.PASSWORD_REUSED);
         }
     }
 }
