@@ -45,4 +45,8 @@ public class User extends BaseTimeEntity {
     public void withdraw() {
         this.userStatus = UserStatus.WITHDRAWAL;
     }
+
+    public void editPassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

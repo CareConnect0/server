@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import smwu.heartcall.domain.user.dto.DependentDetailResponseDto;
-import smwu.heartcall.domain.user.dto.LinkRequestDto;
-import smwu.heartcall.domain.user.dto.SignUpRequestDto;
-import smwu.heartcall.domain.user.dto.WithdrawRequestDto;
+import smwu.heartcall.domain.user.dto.*;
 import smwu.heartcall.domain.user.service.UserService;
 import smwu.heartcall.global.response.BasicResponse;
 import smwu.heartcall.global.security.UserDetailsImpl;
@@ -76,5 +73,26 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .body(BasicResponse.of("피보호자 조회 완료", responseDtos));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<BasicResponse<UserInfoResponseDto>> getUserInfo(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        UserInfoResponseDto responseDto = userService.getUserInfo(userDetails.getUser());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("회원 정보 조회 성공", responseDto));
+    }
+
     // TODO : 비밀번호 변경 API
+    @PatchMapping("/password")
+    public ResponseEntity<BasicResponse<Void>> editPassword(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody @Valid EditPasswordRequestDto requestDto
+    ) {
+        userService.editPassword(userDetails.getUser(), requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("비밀번호 변경 성공"));
+    }
 }
