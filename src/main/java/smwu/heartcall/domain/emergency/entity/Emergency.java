@@ -3,7 +3,10 @@ package smwu.heartcall.domain.emergency.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import smwu.heartcall.domain.user.entity.User;
+import smwu.heartcall.global.converter.StringArrayConverter;
 import smwu.heartcall.global.entity.BaseTimeEntity;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,10 +22,11 @@ public class Emergency extends BaseTimeEntity {
     @JoinColumn(name = "dependent_id", nullable = false)
     private User dependent;
 
+    @Convert(converter = StringArrayConverter.class)
     @Column(length = 200)
-    private String keyword;
+    private List<String> keyword;
 
-    @Column(nullable = false, length = 500)
+    @Column(length = 500)
     private String audioUrl;
 
     private boolean isChecked = false;

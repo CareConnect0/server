@@ -35,18 +35,28 @@ public class EmergencyController {
                 .status(HttpStatus.OK)
                 .body(BasicResponse.of("비상 호출 음성 업로드 완료", responseDto));
     }
-    @PostMapping
+    @PostMapping("/audio-trigger")
     @PreAuthorize("@userPermissionChecker.isDependent(authentication)")
-    public ResponseEntity<BasicResponse<Void>> callEmergency(
+    public ResponseEntity<BasicResponse<Void>> callEmergencyByAudio(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody @Valid CallEmergencyRequestDto requestDto
     ) {
-        emergencyService.callEmergency(userDetails.getUser(), requestDto);
+        emergencyService.callEmergencyByAudio(userDetails.getUser(), requestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(BasicResponse.of("비상 호출 데이터 생성 완료"));
     }
-    // 유저에 따른 비상 호출 내역 조회 24시간이 지난 것 자동 삭제? (isSolved 안된 것 모두 조회)
+
+    @PostMapping
+    @PreAuthorize("@userPermissionChecker.isDependent(authentication)")
+    public ResponseEntity<BasicResponse<Void>> callEmergency(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        emergencyService.callEmergency(userDetails.getUser());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(BasicResponse.of("비상 호출 데이터 생성 완료"));
+    }
 
     // 특정 유저가 보낸 비상 호출 목록 조회
     @GetMapping
@@ -61,7 +71,6 @@ public class EmergencyController {
                 .body(BasicResponse.of("비상 호출 데이터 조회 완료", responseDto));
     }
 
-    // 전체 dependent 비상 호출 목록 조회?
     @PatchMapping("/{emergencyId}")
     @PreAuthorize("@userPermissionChecker.isGuardian(authentication)")
     public ResponseEntity<BasicResponse<EmergencyDetailResponseDto>> handleEmergency(
