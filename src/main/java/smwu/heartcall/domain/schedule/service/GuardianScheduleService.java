@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smwu.heartcall.domain.schedule.dto.GuardianCreateScheduleRequestDto;
 import smwu.heartcall.domain.schedule.dto.GuardianEditScheduleRequestDto;
+import smwu.heartcall.domain.schedule.dto.ScheduleDateResponseDto;
 import smwu.heartcall.domain.schedule.dto.ScheduleDetailResponseDto;
 import smwu.heartcall.domain.schedule.entity.Schedule;
 import smwu.heartcall.domain.schedule.repository.ScheduleRepository;
@@ -50,6 +51,14 @@ public class GuardianScheduleService {
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
         List<Schedule> schedules = scheduleRepository.findSchedulesOfDay(dependent, startOfDay, endOfDay);
         return schedules.stream().map(ScheduleDetailResponseDto::of).toList();
+    }
+
+    public ScheduleDateResponseDto getScheduleDates(User user, Long dependentId, Integer year, Integer month) {
+        User dependent = userRepository.findByIdOrElseThrow(dependentId);
+        checkGuardianRelation(dependent, user);
+
+        List<LocalDateTime> datetimeList = scheduleRepository.findAllDateTimeByUserAndMonth(dependent.getId(), year, month);
+        return ScheduleDateResponseDto.of(datetimeList);
     }
 
     @Transactional

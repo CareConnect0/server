@@ -46,6 +46,20 @@ public class GuardianScheduleController {
                 .body(BasicResponse.of("일정 조회 완료", responseDtoList));
     }
 
+    @GetMapping("/dates")
+    public ResponseEntity<BasicResponse<ScheduleDateResponseDto>> getScheduleDates(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam("dependentId") Long dependentId,
+            @RequestParam("year") Integer year,
+            @RequestParam("month") Integer month
+    ) {
+        ScheduleDateResponseDto responseDtoList = scheduleService.getScheduleDates(userDetails.getUser(), dependentId, year, month);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("해당 월의 일정 조회 완료", responseDtoList));
+    }
+
     @PatchMapping("/{scheduleId}")
     public ResponseEntity<BasicResponse<ScheduleDetailResponseDto>> editSchedule(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
