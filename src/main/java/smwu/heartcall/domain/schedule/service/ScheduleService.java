@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smwu.heartcall.domain.schedule.dto.CreateScheduleRequestDto;
 import smwu.heartcall.domain.schedule.dto.EditScheduleRequestDto;
+import smwu.heartcall.domain.schedule.dto.ScheduleDateResponseDto;
 import smwu.heartcall.domain.schedule.dto.ScheduleDetailResponseDto;
 import smwu.heartcall.domain.schedule.entity.Schedule;
 import smwu.heartcall.domain.schedule.repository.ScheduleRepository;
@@ -45,6 +46,12 @@ public class ScheduleService {
         List<Schedule> schedules = scheduleRepository.findSchedulesOfDay(user, startOfDay, endOfDay);
         return schedules.stream().map(ScheduleDetailResponseDto::of).toList();
     }
+
+    public ScheduleDateResponseDto getScheduleDates(User user, Integer year, Integer month) {
+        List<LocalDateTime> datetimeList = scheduleRepository.findAllDateTimeByUserAndMonth(user.getId(), year, month);
+        return ScheduleDateResponseDto.of(datetimeList);
+    }
+
 
     @Transactional
     public ScheduleDetailResponseDto editSchedule(User user, Long scheduleId, EditScheduleRequestDto requestDto) {

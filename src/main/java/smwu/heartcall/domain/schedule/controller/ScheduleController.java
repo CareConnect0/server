@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import smwu.heartcall.domain.schedule.dto.CreateScheduleRequestDto;
 import smwu.heartcall.domain.schedule.dto.EditScheduleRequestDto;
+import smwu.heartcall.domain.schedule.dto.ScheduleDateResponseDto;
 import smwu.heartcall.domain.schedule.dto.ScheduleDetailResponseDto;
 import smwu.heartcall.domain.schedule.service.ScheduleService;
 import smwu.heartcall.global.response.BasicResponse;
@@ -45,6 +46,19 @@ public class ScheduleController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(BasicResponse.of("일정 조회 완료", responseDtoList));
+    }
+
+    @GetMapping("/dates")
+    public ResponseEntity<BasicResponse<ScheduleDateResponseDto>> getScheduleDates(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam("year") Integer year,
+            @RequestParam("month") Integer month
+    ) {
+        ScheduleDateResponseDto responseDtoList = scheduleService.getScheduleDates(userDetails.getUser(), year, month);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("해당 월의 일정 조회 완료", responseDtoList));
     }
 
     @PatchMapping("/{scheduleId}")
