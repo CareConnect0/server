@@ -30,13 +30,22 @@ public class EmergencyService {
     private final S3Uploader s3Uploader;
 
     @Transactional
+    public void callEmergency(User user) {
+        Emergency emergency = Emergency.builder()
+                .dependent(user)
+                .build();
+
+        emergencyRepository.save(emergency);
+    }
+
+    @Transactional
     public EmergencyAudioUrlResponseDto uploadEmergencyAudio(User user, MultipartFile audioFile) {
         String url = s3Uploader.uploadEmergencyAudio(audioFile, user.getId());
         return EmergencyAudioUrlResponseDto.of(url);
     }
 
     @Transactional
-    public void callEmergency(User user, CallEmergencyRequestDto requestDto) {
+    public void callEmergencyByAudio(User user, CallEmergencyRequestDto requestDto) {
         Emergency emergency = Emergency.builder()
                 .dependent(user)
                 .keyword(requestDto.getKeyword())
