@@ -13,7 +13,7 @@
 //
 //@Configuration
 //@EnableWebSocketSecurity
-//public class WebSocketSecurityConfig {
+//public class WebSocketSecurityConfig extends Abstra{
 //
 //    @Bean
 //    public SecurityFilterChain springWebSocketSecurity(HttpSecurity http) throws Exception {

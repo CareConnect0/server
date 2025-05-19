@@ -36,7 +36,7 @@ public class StompHandShakeInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-//        if(StompCommand.CONNECTED.equals(accessor.getCommand())) {
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             List<String> authorization = accessor.getNativeHeader(JwtProvider.AUTHORIZATION_HEADER);
             if (authorization != null && !authorization.isEmpty()) {
                 String accessToken = authorization.get(0).substring(BEARER_PREFIX.length());
@@ -53,16 +53,16 @@ public class StompHandShakeInterceptor implements ChannelInterceptor {
                     throw new CustomSecurityException(SecurityErrorCode.INVALID_ACCESS_TOKEN);
                 }
             }
-//        }
+        }
         return message;
     }
 
-    private void setAuthentication(String username, StompHeaderAccessor accessor) {
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
+    private void setAuthentication(String username, StompHeaderAccessor accessor){
+//        SecurityContext context = SecurityContextHolder.createEmptyContext();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
         accessor.setUser(authentication);
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
+//        context.setAuthentication(authentication);
+//        SecurityContextHolder.setContext(context);
     }
 }

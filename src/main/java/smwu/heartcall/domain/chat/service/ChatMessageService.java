@@ -25,7 +25,31 @@ public class ChatMessageService {
 
     @Transactional
     public void sendMessage(Long roomId, SaveMessageRequestDto requestDto) {
-        User sender = userRepository.findByIdOrElseThrow(requestDto.getSenderId());
+//        User sender = userRepository.findByIdOrElseThrow(requestDto.getSenderId());
+//        ChatRoom chatRoom = chatRoomRepository.findByIdOrElseThrow(roomId);
+//
+//        User receiver;
+//        if (sender.getId().equals(chatRoom.getGuardian().getId())) {
+//            receiver = chatRoom.getDependent();
+//        } else {
+//            receiver = chatRoom.getGuardian();
+//        }
+//
+//        ChatMessage chatMessage = ChatMessage.builder()
+//                .chatRoom(chatRoom)
+//                .sender(sender)
+//                .content(requestDto.getContent())
+//                .build();
+//
+//        chatMessageRepository.save(chatMessage);
+//
+//        messagingTemplate.convertAndSend("/sub/chats/rooms/" + roomId, MessageResponseDto.of(chatMessage));
+//        notificationService.sendChatNotifications(sender, receiver, requestDto.getContent());
+    }
+
+    @Transactional
+    public void sendMessage(User sender, Long roomId, SaveMessageRequestDto requestDto) {
+//        User sender = userRepository.findByIdOrElseThrow(requestDto.getSenderId());
         ChatRoom chatRoom = chatRoomRepository.findByIdOrElseThrow(roomId);
 
         User receiver;

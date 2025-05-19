@@ -21,10 +21,10 @@ public class ChatMessageController {
 
     @MessageMapping("/chats/rooms/{roomId}/messages")
     public void sendMessage(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @DestinationVariable final Long roomId,
             SaveMessageRequestDto requestDto
     ) {
-        chatMessageService.sendMessage(roomId, requestDto);
+        chatMessageService.sendMessage(userDetails.getUser(), roomId, requestDto);
     }
 }
