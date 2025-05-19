@@ -17,16 +17,24 @@ public class Notification extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private User receiver;
 
-    // 300자
+    @Column(nullable = false)
+    private String title;
+
     @Column(nullable = false, length = 300)
     private String content;
+
+    private String relatedUrl;
 
     private boolean isRead = false;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
+
+    public void read() {
+        this.isRead = true;
+    }
 }
