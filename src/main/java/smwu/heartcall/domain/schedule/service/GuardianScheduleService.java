@@ -3,6 +3,7 @@ package smwu.heartcall.domain.schedule.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smwu.heartcall.domain.notification.service.NotificationService;
 import smwu.heartcall.domain.schedule.dto.GuardianCreateScheduleRequestDto;
 import smwu.heartcall.domain.schedule.dto.GuardianEditScheduleRequestDto;
 import smwu.heartcall.domain.schedule.dto.ScheduleDateResponseDto;
@@ -28,11 +29,12 @@ public class GuardianScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final RelationRepository relationRepository;
+    private final NotificationService notificationService;
 
     @Transactional
-    public void createSchedule(User user, GuardianCreateScheduleRequestDto requestDto) {
+    public void createSchedule(User guardian, GuardianCreateScheduleRequestDto requestDto) {
         User dependent = userRepository.findByIdOrElseThrow(requestDto.getDependentId());
-        checkGuardianRelation(dependent, user);
+        checkGuardianRelation(dependent, guardian);
 
         Schedule schedule = Schedule.builder()
                 .content(requestDto.getContent())
@@ -41,6 +43,7 @@ public class GuardianScheduleService {
                 .build();
 
         scheduleRepository.save(schedule);
+        notificationService.sendScheduleCreatedByGuardianNotifications(dependent, guardian, requestDto.getContent());
     }
 
     public List<ScheduleDetailResponseDto> getSchedules(User user, Long dependentId, LocalDate date) {

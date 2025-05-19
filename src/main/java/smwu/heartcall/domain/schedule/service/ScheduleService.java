@@ -3,6 +3,7 @@ package smwu.heartcall.domain.schedule.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smwu.heartcall.domain.notification.service.NotificationService;
 import smwu.heartcall.domain.schedule.dto.CreateScheduleRequestDto;
 import smwu.heartcall.domain.schedule.dto.EditScheduleRequestDto;
 import smwu.heartcall.domain.schedule.dto.ScheduleDateResponseDto;
@@ -24,8 +25,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-    private final FcmService fcmService;
-    private final FcmRepository fcmRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public void createSchedule(User user, CreateScheduleRequestDto requestDto) {
@@ -36,8 +36,7 @@ public class ScheduleService {
                 .build();
 
         scheduleRepository.save(schedule);
-//        String token = fcmRepository.findByUserOrElseThrow(user).getToken();
-//        fcmService.sendNotification(token, "일정 알림", "새로운 일정이 등록되었습니다.");
+        notificationService.sendScheduleCreatedNotifications(user, requestDto.getContent());
     }
 
     public List<ScheduleDetailResponseDto> getSchedules(User user, LocalDate date) {

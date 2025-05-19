@@ -7,7 +7,9 @@ import smwu.heartcall.domain.notification.dto.NotificationDetailResponseDto;
 import smwu.heartcall.domain.notification.entity.Notification;
 import smwu.heartcall.domain.notification.enums.NotificationType;
 import smwu.heartcall.domain.notification.repository.NotificationRepository;
+import smwu.heartcall.domain.user.entity.DependentRelation;
 import smwu.heartcall.domain.user.entity.User;
+import smwu.heartcall.domain.user.repository.RelationRepository;
 import smwu.heartcall.global.fcm.service.FcmService;
 
 import java.util.List;
@@ -17,6 +19,36 @@ import java.util.List;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final FcmService fcmService;
+    private final RelationRepository relationRepository;
+
+    // 메시지를 보낸 사람, 메시지를 보낼 사람
+    // 피보호자가 스케줄 생성 시 -> 보호자에게 알림 전송
+    // 보호자가 스케줄 생성 시 -> 해당 피보호자에게 알림 전송
+    @Transactional
+    public void sendScheduleCreatedNotifications(User dependent, String content) {
+        DependentRelation relation = relationRepository.findByDependentOrElseThrow(dependent);
+        String title = NotificationType.SCHEDULE_CREATE.formatTitle(dependent.getName());
+        sendNotification(relation.getGuardian(), title, content);
+    }
+
+    @Transactional
+    public void sendScheduleCreatedByGuardianNotifications(User dependent, User guardian, String content) {
+        String title = NotificationType.SCHEDULE_CREATE.formatTitle(guardian.getName());
+        sendNotification(dependent, title, content);
+    }
+
+    @Transactional
+    public void sendChatNotifications(User sender, User receiver, String content) {
+        String title = NotificationType.CHAT.formatTitle(sender.getName());
+        sendNotification(receiver, title, content);
+    }
+
+    @Transactional
+    public void sendEmergencyNotifications(User dependent, String content) {
+        DependentRelation relation = relationRepository.findByDependentOrElseThrow(dependent);
+        String title = NotificationType.EMERGENCY.formatTitle(dependent.getName());
+        sendNotification(relation.getGuardian(), title, content);
+    }
 
     @Transactional
     public void sendNotification(User receiver, NotificationType notificationType, String content) {
@@ -28,6 +60,18 @@ public class NotificationService {
 
         notificationRepository.save(notification);
         fcmService.sendNotification(receiver, notification);
+    }
+
+    @Transactional
+    public void sendNotification(User receiver, String title, String content) {
+        Notification notification = Notification.builder()
+                .receiver(receiver)
+                .title(title)
+                .content(content)
+                .build();
+
+        notificationRepository.save(notification);
+//        fcmService.sendNotification(receiver, notification);
     }
 
     @Transactional
