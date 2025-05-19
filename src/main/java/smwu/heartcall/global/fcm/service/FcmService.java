@@ -3,10 +3,10 @@ package smwu.heartcall.global.fcm.service;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smwu.heartcall.domain.notification.entity.Notification;
 import smwu.heartcall.domain.user.entity.User;
 import smwu.heartcall.global.exception.CustomException;
 import smwu.heartcall.global.exception.errorCode.FcmErrorCode;
@@ -14,6 +14,7 @@ import smwu.heartcall.global.fcm.dto.FcmTokenRequestDto;
 import smwu.heartcall.global.fcm.entity.FcmToken;
 import smwu.heartcall.global.fcm.repository.FcmRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,12 +39,23 @@ public class FcmService {
         }
     }
 
-    public void sendNotification(String token, String title, String message) {
+    public void sendNotification(User receiver, Notification notification) {
+        List<FcmToken> tokenList = fcmRepository.findAllByUser(receiver);
+        if(!tokenList.isEmpty()) {
+            for(FcmToken fcmToken : tokenList) {
+                sendFcmMessage(fcmToken.getToken(), notification);
+            }
+        } else {
+            throw new CustomException(FcmErrorCode.TOKEN_NOT_FOUND);
+        }
+    }
+
+    public void sendFcmMessage(String token, Notification notification) {
         try {
             Message fcmMessage = Message.builder()
                     .setToken(token)
-                    .putData("title", title)
-                    .putData("message", message)
+                    .putData("title", notification.getTitle())
+                    .putData("message", notification.getContent())
                     .build();
 
             String response = FirebaseMessaging.getInstance().send(fcmMessage);

@@ -18,7 +18,7 @@ public class FcmToken {
     @Column(nullable = false)
     private String token;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }

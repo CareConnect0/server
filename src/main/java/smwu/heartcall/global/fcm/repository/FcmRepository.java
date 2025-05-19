@@ -7,6 +7,7 @@ import smwu.heartcall.global.exception.errorCode.FcmErrorCode;
 import smwu.heartcall.global.exception.errorCode.ScheduleErrorCode;
 import smwu.heartcall.global.fcm.entity.FcmToken;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FcmRepository extends JpaRepository<FcmToken, Long> {
@@ -16,4 +17,6 @@ public interface FcmRepository extends JpaRepository<FcmToken, Long> {
         return findByUser(user).orElseThrow(()
                 -> new CustomException(FcmErrorCode.TOKEN_NOT_FOUND));
     }
+
+    List<FcmToken> findAllByUser(User user);
 }
