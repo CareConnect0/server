@@ -30,6 +30,9 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String phoneNumber;
 
+    @Column(length = 500)
+    private String profileUrl;
+
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserType userType;
@@ -44,6 +47,14 @@ public class User extends BaseTimeEntity {
 
     public void withdraw() {
         this.userStatus = UserStatus.WITHDRAWAL;
+    }
+
+    public void clearProfileUrl() {
+        this.profileUrl = null;
+    }
+
+    public void editProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 
     public void editPassword(String newPassword) {

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import smwu.heartcall.domain.user.dto.*;
 import smwu.heartcall.domain.user.service.UserService;
 import smwu.heartcall.global.response.BasicResponse;
@@ -82,6 +83,17 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(BasicResponse.of("회원 정보 조회 성공", responseDto));
+    }
+
+    @PatchMapping("/profile")
+    public ResponseEntity<BasicResponse<Void>> updateProfileImage(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart(required = false) MultipartFile imageFile
+    ) {
+        userService.updateProfileImage(userDetails.getUser(), imageFile);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(BasicResponse.of("회원 프로필 변경 성공"));
     }
 
     // TODO : 비밀번호 변경 API

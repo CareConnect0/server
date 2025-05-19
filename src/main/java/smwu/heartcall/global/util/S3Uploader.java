@@ -22,9 +22,24 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    public String uploadUserProfile(MultipartFile file, Long userId) {
+        String imageDir = S3Util.createProfileDir(userId);
+        return uploadImage(file, imageDir);
+    }
+
     public String uploadEmergencyAudio(MultipartFile file, Long userId) {
         String audioDir = S3Util.createEmergencyDir(userId); // 파일 저장 경로 생성
         return uploadAudio(file, audioDir);
+    }
+
+    private String uploadImage(MultipartFile file, String imageDir) {
+        if(!S3Util.doesFileExist(file)) {
+            throw new CustomException(S3ErrorCode.FILE_DOES_NOT_EXIST);
+        }
+
+        String extension = S3Util.getValidateImageExtension(file.getOriginalFilename());
+        String uploadFileName = imageDir + S3Util.createFileName(extension);
+        return uploadFileToS3(file, uploadFileName);
     }
 
     private String uploadAudio(MultipartFile file, String audioDir) {

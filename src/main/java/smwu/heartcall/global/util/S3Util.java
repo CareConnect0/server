@@ -11,6 +11,7 @@ import java.util.UUID;
 public abstract class S3Util {
 
     private static final String USER_DIR = "user";
+    private static final String PROFILE_DIR = "profile";
     private static final String EMERGENCY_DIR = "emergency";
 
 
@@ -23,7 +24,24 @@ public abstract class S3Util {
     }
 
     /**
-     * 파일 확장자 검사
+     * 이미지 파일 확장자 검사
+     */
+    public static String getValidateImageExtension(String fileName) {
+        List<String> validExtensionList = Arrays.asList("jpg", "jpeg", "png");
+
+        int extensionIndex = fileName.lastIndexOf(".");
+
+        String extension = fileName.substring(extensionIndex + 1).toLowerCase();
+
+        if (!validExtensionList.contains(extension)) {
+            throw new CustomException(S3ErrorCode.INVALID_EXTENSION);
+        }
+
+        return extension;
+    }
+
+    /**
+     * 오디오 파일 확장자 검사
      */
     public static String getValidateAudioExtension(String fileName) {
         List<String> validExtensionList = Arrays.asList("wav", "flac", "mp3", "m4a");
@@ -37,6 +55,10 @@ public abstract class S3Util {
         }
 
         return extension;
+    }
+
+    public static String createProfileDir(Long userId) {
+        return PROFILE_DIR + "/" + USER_DIR + "/" + userId + "/";
     }
 
     /**
