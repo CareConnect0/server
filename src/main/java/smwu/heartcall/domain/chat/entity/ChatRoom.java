@@ -26,4 +26,6 @@ public class ChatRoom extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dependent_id", nullable = false)
     private User dependent;
+
+    // TODO 채팅 상대방을 반환하는 메서드 추가
 }
