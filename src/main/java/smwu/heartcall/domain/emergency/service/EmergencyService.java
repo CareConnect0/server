@@ -10,6 +10,7 @@ import smwu.heartcall.domain.emergency.dto.EmergencyDetailResponseDto;
 import smwu.heartcall.domain.emergency.dto.GetEmergencyResponseDto;
 import smwu.heartcall.domain.emergency.entity.Emergency;
 import smwu.heartcall.domain.emergency.repository.EmergencyRepository;
+import smwu.heartcall.domain.notification.service.NotificationService;
 import smwu.heartcall.domain.user.entity.User;
 import smwu.heartcall.domain.user.repository.RelationRepository;
 import smwu.heartcall.domain.user.repository.UserRepository;
@@ -28,14 +29,16 @@ public class EmergencyService {
     private final UserRepository userRepository;
     private final RelationRepository relationRepository;
     private final S3Uploader s3Uploader;
+    private final NotificationService notificationService;
 
     @Transactional
-    public void callEmergency(User user) {
+    public void callEmergency(User dependent) {
         Emergency emergency = Emergency.builder()
-                .dependent(user)
+                .dependent(dependent)
                 .build();
 
         emergencyRepository.save(emergency);
+        notificationService.sendEmergencyNotifications(dependent, NotificationService.DIRECT_EMERGENCY_CONTENT);
     }
 
     @Transactional
@@ -45,15 +48,15 @@ public class EmergencyService {
     }
 
     @Transactional
-    public void callEmergencyByAudio(User user, CallEmergencyRequestDto requestDto) {
+    public void callEmergencyByAudio(User dependent, CallEmergencyRequestDto requestDto) {
         Emergency emergency = Emergency.builder()
-                .dependent(user)
+                .dependent(dependent)
                 .keyword(requestDto.getKeyword())
                 .audioUrl(requestDto.getAudioUrl())
                 .build();
 
         emergencyRepository.save(emergency);
-        // fcm, notification
+        notificationService.sendEmergencyNotifications(dependent, NotificationService.AUDIO_EMERGENCY_CONTENT);
     }
 
     public List<GetEmergencyResponseDto> getEmergencies(User guardian, Long dependentId) {

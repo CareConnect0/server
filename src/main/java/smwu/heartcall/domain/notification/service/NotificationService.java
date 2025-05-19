@@ -17,6 +17,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
+    public static final String AUDIO_EMERGENCY_CONTENT = "음성 자동 긴급 호출";
+    public static final String DIRECT_EMERGENCY_CONTENT = "직접 긴급 호출";
+
     private final NotificationRepository notificationRepository;
     private final FcmService fcmService;
     private final RelationRepository relationRepository;
@@ -51,18 +54,6 @@ public class NotificationService {
     }
 
     @Transactional
-    public void sendNotification(User receiver, NotificationType notificationType, String content) {
-        Notification notification = Notification.builder()
-                .receiver(receiver)
-                .title(notificationType.formatTitle(receiver.getName()))
-                .content(content)
-                .build();
-
-        notificationRepository.save(notification);
-        fcmService.sendNotification(receiver, notification);
-    }
-
-    @Transactional
     public void sendNotification(User receiver, String title, String content) {
         Notification notification = Notification.builder()
                 .receiver(receiver)
@@ -71,7 +62,7 @@ public class NotificationService {
                 .build();
 
         notificationRepository.save(notification);
-//        fcmService.sendNotification(receiver, notification);
+//        fcmService.sendNotification(receiver, notification); // fcm 설정 후 활성화
     }
 
     @Transactional
