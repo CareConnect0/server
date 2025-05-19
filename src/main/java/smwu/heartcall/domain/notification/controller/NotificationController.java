@@ -28,7 +28,7 @@ public class NotificationController {
                 .body(BasicResponse.of("알림 조회 완료", responseDto));
     }
 
-    @PatchMapping("/all")
+    @DeleteMapping("/all")
     public ResponseEntity<BasicResponse<Void>> deleteAllNotifications(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
@@ -38,7 +38,7 @@ public class NotificationController {
                 .body(BasicResponse.of("전체 알림 삭제 완료"));
     }
 
-    @PatchMapping("/{notificationId}")
+    @DeleteMapping("/{notificationId}")
     public ResponseEntity<BasicResponse<Void>> deleteNotification(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long notificationId
