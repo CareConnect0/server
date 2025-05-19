@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import smwu.heartcall.domain.notification.entity.Notification;
+import smwu.heartcall.domain.notification.enums.NotificationType;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class NotificationDetailResponseDto {
     private Long notificationId;
+    private NotificationType notificationType;
     private String title;
     private String content;
     private boolean isRead;
@@ -22,6 +24,7 @@ public class NotificationDetailResponseDto {
     public static NotificationDetailResponseDto of(Notification notification) {
         return NotificationDetailResponseDto.builder()
                 .notificationId(notification.getId())
+                .notificationType(notification.getNotificationType())
                 .title(notification.getTitle())
                 .content(notification.getContent())
                 .isRead(notification.isRead())

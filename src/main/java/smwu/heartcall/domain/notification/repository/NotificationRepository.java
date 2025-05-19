@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findAllByReceiver(User receiver);
+    List<Notification> findAllByReceiverOrderByCreatedAtDesc(User receiver);
     Optional<Notification> findByIdAndReceiver(Long id, User receiver);
 
     default Notification findByIdAndUserOrElseThrow(Long notificationId, User user) {

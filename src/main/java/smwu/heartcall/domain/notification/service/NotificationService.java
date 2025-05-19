@@ -30,33 +30,32 @@ public class NotificationService {
     @Transactional
     public void sendScheduleCreatedNotifications(User dependent, String content) {
         DependentRelation relation = relationRepository.findByDependentOrElseThrow(dependent);
-        String title = NotificationType.SCHEDULE_CREATE.formatTitle(dependent.getName());
-        sendNotification(relation.getGuardian(), title, content);
+        sendNotification(dependent, relation.getGuardian(), NotificationType.SCHEDULE_CREATE, content);
     }
 
     @Transactional
     public void sendScheduleCreatedByGuardianNotifications(User dependent, User guardian, String content) {
-        String title = NotificationType.SCHEDULE_CREATE.formatTitle(guardian.getName());
-        sendNotification(dependent, title, content);
+        sendNotification(guardian, dependent, NotificationType.SCHEDULE_CREATE_BY_GUARDIAN, content);
     }
 
     @Transactional
     public void sendChatNotifications(User sender, User receiver, String content) {
-        String title = NotificationType.CHAT.formatTitle(sender.getName());
-        sendNotification(receiver, title, content);
+        sendNotification(sender, receiver, NotificationType.CHAT, content);
     }
 
     @Transactional
     public void sendEmergencyNotifications(User dependent, String content) {
         DependentRelation relation = relationRepository.findByDependentOrElseThrow(dependent);
-        String title = NotificationType.EMERGENCY.formatTitle(dependent.getName());
-        sendNotification(relation.getGuardian(), title, content);
+        sendNotification(dependent, relation.getGuardian(), NotificationType.EMERGENCY, content);
     }
 
     @Transactional
-    public void sendNotification(User receiver, String title, String content) {
+    public void sendNotification(User sender, User receiver, NotificationType notificationType, String content) {
+        String title = notificationType.formatTitle(sender.getName());
+
         Notification notification = Notification.builder()
                 .receiver(receiver)
+                .notificationType(notificationType)
                 .title(title)
                 .content(content)
                 .build();
@@ -67,7 +66,7 @@ public class NotificationService {
 
     @Transactional
     public List<NotificationDetailResponseDto> getNotifications(User user) {
-        List<Notification> notifications = notificationRepository.findAllByReceiver(user);
+        List<Notification> notifications = notificationRepository.findAllByReceiverOrderByCreatedAtDesc(user);
         List<NotificationDetailResponseDto> responseDtoList = notifications.stream().map(NotificationDetailResponseDto::of).toList();
 
         for(Notification notification : notifications) {
