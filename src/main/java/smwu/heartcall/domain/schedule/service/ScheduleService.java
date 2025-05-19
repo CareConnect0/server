@@ -11,8 +11,6 @@ import smwu.heartcall.domain.schedule.dto.ScheduleDetailResponseDto;
 import smwu.heartcall.domain.schedule.entity.Schedule;
 import smwu.heartcall.domain.schedule.repository.ScheduleRepository;
 import smwu.heartcall.domain.user.entity.User;
-import smwu.heartcall.global.fcm.repository.FcmRepository;
-import smwu.heartcall.global.fcm.service.FcmService;
 import smwu.heartcall.global.util.LocalDatetimeUtil;
 
 import java.time.LocalDate;

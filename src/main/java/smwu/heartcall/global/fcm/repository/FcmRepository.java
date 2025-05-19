@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import smwu.heartcall.domain.user.entity.User;
 import smwu.heartcall.global.exception.CustomException;
 import smwu.heartcall.global.exception.errorCode.FcmErrorCode;
-import smwu.heartcall.global.exception.errorCode.ScheduleErrorCode;
 import smwu.heartcall.global.fcm.entity.FcmToken;
 
 import java.util.List;
