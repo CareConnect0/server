@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import smwu.heartcall.global.exception.errorCode.CommonErrorCode;
+import smwu.heartcall.global.exception.errorCode.ErrorCode;
 import smwu.heartcall.global.response.ErrorResponse;
 
 import java.util.Map;
@@ -45,5 +46,13 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(e.getErrorCode().getStatusCode())
                 .body(new ErrorResponse<>(e.getErrorCode()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse<Void>> handleAll(Exception e) {
+        log.error("예외 발생", e);
+        ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(new ErrorResponse<>(errorCode));
     }
 }
