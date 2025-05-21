@@ -11,7 +11,7 @@ services:
     networks:
       - app-network
     volumes:
-      - src/main/resources/heartcall-aeed8-firebase-adminsdk-fbsvc-cc15fa690d.json:/app/src/main/resources/heartcall-aeed8-firebase-adminsdk-fbsvc-cc15fa690d.json
+      - ./src/main/resources/heartcall-c0e63-firebase-adminsdk-fbsvc-d37770e367.json:/app/src/main/resources/heartcall-c0e63-firebase-adminsdk-fbsvc-d37770e367.json
   redis:
     image: redis:latest
     ports:
