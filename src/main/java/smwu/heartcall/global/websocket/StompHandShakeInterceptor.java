@@ -1,10 +1,7 @@
-package smwu.heartcall.global.security.filter;
+package smwu.heartcall.global.websocket;
 
-import io.jsonwebtoken.Jwt;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -12,9 +9,9 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import smwu.heartcall.global.exception.CustomSecurityException;
 import smwu.heartcall.global.exception.errorCode.SecurityErrorCode;
 import smwu.heartcall.global.jwt.JwtProvider;
@@ -22,11 +19,11 @@ import smwu.heartcall.global.jwt.RefreshTokenService;
 import smwu.heartcall.global.security.UserDetailsServiceImpl;
 
 import java.util.List;
-import java.util.Map;
 
 import static smwu.heartcall.global.jwt.JwtProvider.BEARER_PREFIX;
 
-@Configuration
+@Slf4j
+@Component
 @RequiredArgsConstructor
 public class StompHandShakeInterceptor implements ChannelInterceptor {
     private final JwtProvider jwtProvider;
@@ -35,7 +32,9 @@ public class StompHandShakeInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = StompHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
+        log.info("preSend 호출됨 - Command: {}", accessor.getCommand());
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             List<String> authorization = accessor.getNativeHeader(JwtProvider.AUTHORIZATION_HEADER);
             if (authorization != null && !authorization.isEmpty()) {
@@ -54,15 +53,17 @@ public class StompHandShakeInterceptor implements ChannelInterceptor {
                 }
             }
         }
+        log.info("Principal set : {}", accessor.getUser());
         return message;
     }
 
     private void setAuthentication(String username, StompHeaderAccessor accessor){
-//        SecurityContext context = SecurityContextHolder.createEmptyContext();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        // Accessor (STOMP 접근자)에 사용자 정보 저장
         accessor.setUser(authentication);
-//        context.setAuthentication(authentication);
-//        SecurityContextHolder.setContext(context);
+        accessor.getSessionAttributes().put("user", authentication);  // 세션에 인증 객체 저장
+        // Authentication 객체를 SecurityContextHolder에 설정해 현재 보안 컨텍스트에 인증 정보 저장
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
