@@ -3,16 +3,13 @@ package smwu.heartcall.domain.chat.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.RestController;
 import smwu.heartcall.domain.chat.dto.SaveMessageRequestDto;
-import smwu.heartcall.domain.chat.entity.ChatMessage;
 import smwu.heartcall.domain.chat.service.ChatMessageService;
 import smwu.heartcall.global.security.UserDetailsImpl;
+
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,10 +18,11 @@ public class ChatMessageController {
 
     @MessageMapping("/chats/rooms/{roomId}/messages")
     public void sendMessage(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            Principal principal,
             @DestinationVariable final Long roomId,
             SaveMessageRequestDto requestDto
     ) {
-        chatMessageService.sendMessage(roomId, requestDto);
+        UserDetailsImpl userDetails = (UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        chatMessageService.sendMessage(userDetails.getUser(), roomId, requestDto);
     }
 }

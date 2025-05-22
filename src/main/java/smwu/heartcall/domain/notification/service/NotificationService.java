@@ -61,7 +61,7 @@ public class NotificationService {
                 .build();
 
         notificationRepository.save(notification);
-//        fcmService.sendNotification(receiver, notification); // fcm 설정 후 활성화
+        fcmService.sendNotification(receiver, notification); // fcm 설정 후 활성화
     }
 
     @Transactional

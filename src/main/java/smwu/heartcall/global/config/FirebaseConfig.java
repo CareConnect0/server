@@ -14,7 +14,7 @@ public class FirebaseConfig {
     @PostConstruct
     public void init() throws IOException {
         FileInputStream serviceAccount =
-                new FileInputStream("src/main/resources/heartcall-aeed8-firebase-adminsdk-fbsvc-cc15fa690d.json");
+                new FileInputStream("src/main/resources/heartcall-c0e63-firebase-adminsdk-fbsvc-d37770e367.json");
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

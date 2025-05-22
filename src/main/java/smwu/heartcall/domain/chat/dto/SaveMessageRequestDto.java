@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public class SaveMessageRequestDto {
-    @NotNull
-    private Long senderId;
+//    @NotNull
+//    private Long senderId;
 
     @NotBlank
     private String content;

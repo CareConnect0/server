@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smwu.heartcall.domain.notification.entity.Notification;
@@ -17,6 +18,7 @@ import smwu.heartcall.global.fcm.repository.FcmRepository;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j(topic = "FCM")
 @Service
 @RequiredArgsConstructor
 public class FcmService {
@@ -45,8 +47,6 @@ public class FcmService {
             for(FcmToken fcmToken : tokenList) {
                 sendFcmMessage(fcmToken.getToken(), notification);
             }
-        } else {
-            throw new CustomException(FcmErrorCode.TOKEN_NOT_FOUND);
         }
     }
 
@@ -60,7 +60,8 @@ public class FcmService {
 
             String response = FirebaseMessaging.getInstance().send(fcmMessage);
         } catch (FirebaseMessagingException e) {
-            throw new CustomException(FcmErrorCode.FCM_BAD_REQUEST);
+//            throw new CustomException(FcmErrorCode.FCM_BAD_REQUEST);
+            log.error("알림 전송 실패");
         }
     }
 }
