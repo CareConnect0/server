@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smwu.heartcall.domain.aiAssistant.dto.*;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AiAssistantService {
+    private final SimpMessagingTemplate messagingTemplate;
     private final AiAssistantRoomRepository assistantRoomRepository;
     private final AiAssistantMessageRepository assistantMessageRepository;
 
@@ -91,6 +93,8 @@ public class AiAssistantService {
                 .build();
 
         assistantMessageRepository.save(message);
+
+        messagingTemplate.convertAndSend("/sub/assistant/rooms/" + assistantRoom.getId(), AiMessageResponseDto.of(message));
         return AiMessageResponseDto.of(message);
     }
 }
