@@ -33,7 +33,7 @@ public class NotificationController {
     public ResponseEntity<BasicResponse<UnReadNotificationResponseDto>> checkUnreadNotifications(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        UnReadNotificationResponseDto responseDto = notificationService.checkUnreadNotifications(userDetails.getUser());
+        UnReadNotificationResponseDto responseDto = notificationService.checkUnreadNotifications(userDetails.getUser().getId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(BasicResponse.of("알림 여부 조회 완료", responseDto));

@@ -1,6 +1,7 @@
 package smwu.heartcall.domain.notification.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smwu.heartcall.domain.notification.dto.NotificationDetailResponseDto;
@@ -11,6 +12,7 @@ import smwu.heartcall.domain.notification.repository.NotificationRepository;
 import smwu.heartcall.domain.user.entity.DependentRelation;
 import smwu.heartcall.domain.user.entity.User;
 import smwu.heartcall.domain.user.repository.RelationRepository;
+import smwu.heartcall.domain.user.repository.UserRepository;
 import smwu.heartcall.global.fcm.service.FcmService;
 
 import java.util.List;
@@ -22,8 +24,9 @@ public class NotificationService {
     public static final String DIRECT_EMERGENCY_CONTENT = "직접 긴급 호출";
 
     private final NotificationRepository notificationRepository;
-    private final FcmService fcmService;
+    private final UserRepository userRepository;
     private final RelationRepository relationRepository;
+    private final FcmService fcmService;
 
     // 메시지를 보낸 사람, 메시지를 보낼 사람
     // 피보호자가 스케줄 생성 시 -> 보호자에게 알림 전송
@@ -76,8 +79,10 @@ public class NotificationService {
         return responseDtoList;
     }
 
-    public UnReadNotificationResponseDto checkUnreadNotifications(User user) {
-        boolean hasUnread = notificationRepository.existsByReceiverAndIsRead(user, false);
+    @Cacheable(value = "unreadNotifications", key = "#userId", cacheManager = "redisCacheManager")
+    public UnReadNotificationResponseDto checkUnreadNotifications(Long userId) {
+        User receiver = userRepository.findByIdOrElseThrow(userId);
+        boolean hasUnread = notificationRepository.existsByReceiverAndIsRead(receiver, false);
         return UnReadNotificationResponseDto.of(hasUnread);
     }
 
