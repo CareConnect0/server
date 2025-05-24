@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smwu.heartcall.domain.notification.dto.NotificationDetailResponseDto;
+import smwu.heartcall.domain.notification.dto.UnReadNotificationResponseDto;
 import smwu.heartcall.domain.notification.entity.Notification;
 import smwu.heartcall.domain.notification.enums.NotificationType;
 import smwu.heartcall.domain.notification.repository.NotificationRepository;
@@ -75,12 +76,16 @@ public class NotificationService {
         return responseDtoList;
     }
 
+    public UnReadNotificationResponseDto checkUnreadNotifications(User user) {
+        boolean hasUnread = notificationRepository.existsByReceiverAndIsRead(user, false);
+        return UnReadNotificationResponseDto.of(hasUnread);
+    }
+
     @Transactional
     public void deleteAllNotifications(User user) {
         List<Notification> notifications = notificationRepository.findAllByReceiver(user);
         notificationRepository.deleteAll(notifications);
     }
-
     @Transactional
     public void deleteNotification(User user, Long notificationId) {
         Notification notification = notificationRepository.findByIdAndUserOrElseThrow(notificationId, user);

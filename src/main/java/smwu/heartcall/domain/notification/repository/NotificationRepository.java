@@ -14,6 +14,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findAllByReceiverOrderByCreatedAtDesc(User receiver);
     Optional<Notification> findByIdAndReceiver(Long id, User receiver);
 
+    boolean existsByReceiverAndIsRead(User receiver, boolean isRead);
+
     default Notification findByIdAndUserOrElseThrow(Long notificationId, User user) {
         return findByIdAndReceiver(notificationId, user).orElseThrow(() ->
                 new CustomException(NotificationErrorCode.NOTIFICATION_NOT_FOUND)
