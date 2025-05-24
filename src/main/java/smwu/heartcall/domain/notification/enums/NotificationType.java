@@ -2,6 +2,8 @@ package smwu.heartcall.domain.notification.enums;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public enum NotificationType {
     SCHEDULE_CREATE("${name} 님의 일정이 추가되었습니다!"),
@@ -11,6 +13,8 @@ public enum NotificationType {
     CHAT("${name} 님의 새 메시지가 도착했습니다!"),
     EMERGENCY("${name} 님에게 도움이 필요합니다!")
     ;
+
+    public static final List<NotificationType> SCHEDULE_TYPES = List.of(SCHEDULE_CREATE, SCHEDULE_CREATE_BY_GUARDIAN);
 
     private final String titleTemplate;
 
