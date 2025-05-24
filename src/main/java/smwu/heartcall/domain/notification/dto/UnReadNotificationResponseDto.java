@@ -6,11 +6,19 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UnReadNotificationResponseDto {
-    private boolean hasUnread;
+    private boolean hasUnreadSchedule;
+    private boolean hasUnreadChat;
+    private boolean hasUnreadEmergency;
 
-    public static UnReadNotificationResponseDto of(boolean hasUnread) {
+    public static UnReadNotificationResponseDto of(
+            boolean hasUnreadSchedule,
+            boolean hasUnreadChat,
+            boolean hasUnreadEmergency
+    ) {
         return UnReadNotificationResponseDto.builder()
-                .hasUnread(hasUnread)
+                .hasUnreadSchedule(hasUnreadSchedule)
+                .hasUnreadChat(hasUnreadChat)
+                .hasUnreadEmergency(hasUnreadEmergency)
                 .build();
     }
 }

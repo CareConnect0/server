@@ -82,8 +82,10 @@ public class NotificationService {
     @Cacheable(value = "unreadNotifications", key = "#userId", cacheManager = "redisCacheManager")
     public UnReadNotificationResponseDto checkUnreadNotifications(Long userId) {
         User receiver = userRepository.findByIdOrElseThrow(userId);
-        boolean hasUnread = notificationRepository.existsByReceiverAndIsRead(receiver, false);
-        return UnReadNotificationResponseDto.of(hasUnread);
+        boolean hasUnreadSchedule = hasUnread(receiver, NotificationType.SCHEDULE_TYPES);
+        boolean hasUnreadChat = hasUnread(receiver, NotificationType.CHAT);
+        boolean hasUnreadEmergency = hasUnread(receiver, NotificationType.EMERGENCY);
+        return UnReadNotificationResponseDto.of(hasUnreadSchedule, hasUnreadChat, hasUnreadEmergency);
     }
 
     @Transactional
@@ -91,9 +93,18 @@ public class NotificationService {
         List<Notification> notifications = notificationRepository.findAllByReceiver(user);
         notificationRepository.deleteAll(notifications);
     }
+
     @Transactional
     public void deleteNotification(User user, Long notificationId) {
         Notification notification = notificationRepository.findByIdAndUserOrElseThrow(notificationId, user);
         notificationRepository.delete(notification);
+    }
+
+    private boolean hasUnread(User receiver, NotificationType type) {
+        return notificationRepository.existsUnreadByType(receiver, type);
+    }
+
+    private boolean hasUnread(User receiver, List<NotificationType> types) {
+        return notificationRepository.existsUnreadByTypes(receiver, types);
     }
 }
