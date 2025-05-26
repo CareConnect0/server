@@ -15,7 +15,8 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: 6379
-
+  jackson:
+    time-zone: Asia/Seoul
   servlet:
     multipart:
       enabled: true
