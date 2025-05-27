@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smwu.heartcall.domain.notification.entity.Notification;
 import smwu.heartcall.domain.user.entity.User;
-import smwu.heartcall.global.exception.CustomException;
-import smwu.heartcall.global.exception.errorCode.FcmErrorCode;
 import smwu.heartcall.global.fcm.dto.FcmTokenRequestDto;
 import smwu.heartcall.global.fcm.entity.FcmToken;
 import smwu.heartcall.global.fcm.repository.FcmRepository;
@@ -59,9 +57,9 @@ public class FcmService {
                     .build();
 
             String response = FirebaseMessaging.getInstance().send(fcmMessage);
+            log.info("FCM 알림 전송 성공");
         } catch (FirebaseMessagingException e) {
-//            throw new CustomException(FcmErrorCode.FCM_BAD_REQUEST);
-            log.error("알림 전송 실패");
+            log.error("FCM 알림 전송 실패");
         }
     }
 }

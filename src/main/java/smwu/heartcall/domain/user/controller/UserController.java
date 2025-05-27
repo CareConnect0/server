@@ -96,7 +96,6 @@ public class UserController {
                 .body(BasicResponse.of("회원 프로필 변경 성공"));
     }
 
-    // TODO : 비밀번호 변경 API
     @PatchMapping("/password")
     public ResponseEntity<BasicResponse<Void>> editPassword(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
