@@ -41,6 +41,6 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
 
         messagingTemplate.convertAndSend("/sub/chats/rooms/" + roomId, MessageResponseDto.of(chatMessage));
-        notificationService.sendChatNotifications(sender, receiver, requestDto.getContent());
+        notificationService.sendChatNotifications(sender, receiver, requestDto.getContent(), roomId);
     }
 }

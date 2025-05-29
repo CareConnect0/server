@@ -15,7 +15,7 @@ public class NotificationDetailResponseDto {
     private NotificationType notificationType;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long dependentId;
+    private Long targetId;
     private String title;
     private String content;
     private boolean isRead;
@@ -28,7 +28,7 @@ public class NotificationDetailResponseDto {
         return NotificationDetailResponseDto.builder()
                 .notificationId(notification.getId())
                 .notificationType(notification.getNotificationType())
-                .dependentId(notification.getSender().getId())
+                .targetId(notification.getTargetId())
                 .title(notification.getTitle())
                 .content(notification.getContent())
                 .isRead(notification.isRead())

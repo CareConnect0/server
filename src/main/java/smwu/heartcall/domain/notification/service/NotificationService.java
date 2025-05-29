@@ -31,26 +31,30 @@ public class NotificationService {
     // 메시지를 보낸 사람, 메시지를 보낼 사람
     // 피보호자가 스케줄 생성 시 -> 보호자에게 알림 전송
     // 보호자가 스케줄 생성 시 -> 해당 피보호자에게 알림 전송
+    // targetId : 피보호자 고유 Id or 일정 Id
     @Transactional
     public void sendScheduleCreatedNotifications(User dependent, String content) {
         DependentRelation relation = relationRepository.findByDependentOrElseThrow(dependent);
-        sendNotification(dependent, relation.getGuardian(), NotificationType.SCHEDULE_CREATE, content);
+        sendNotification(dependent, relation.getGuardian(), NotificationType.SCHEDULE_CREATE, content, dependent.getId());
     }
 
+    // targetId : 피보호자 고유 Id or 일정 Id
     @Transactional
     public void sendScheduleCreatedByGuardianNotifications(User dependent, User guardian, String content) {
         sendNotification(guardian, dependent, NotificationType.SCHEDULE_CREATE_BY_GUARDIAN, content);
     }
 
+    // targetId : 채팅방 Id
     @Transactional
-    public void sendChatNotifications(User sender, User receiver, String content) {
-        sendNotification(sender, receiver, NotificationType.CHAT, content);
+    public void sendChatNotifications(User sender, User receiver, String content, Long roomId) {
+        sendNotification(sender, receiver, NotificationType.CHAT, content, roomId);
     }
 
+    // targetId : 피보호자 Id
     @Transactional
     public void sendEmergencyNotifications(User dependent, String content) {
         DependentRelation relation = relationRepository.findByDependentOrElseThrow(dependent);
-        sendNotification(dependent, relation.getGuardian(), NotificationType.EMERGENCY, content);
+        sendNotification(dependent, relation.getGuardian(), NotificationType.EMERGENCY, content, dependent.getId());
     }
 
     @Transactional
@@ -59,7 +63,22 @@ public class NotificationService {
 
         Notification notification = Notification.builder()
                 .receiver(receiver)
-                .sender(sender)
+                .notificationType(notificationType)
+                .title(title)
+                .content(content)
+                .build();
+
+        notificationRepository.save(notification);
+        fcmService.sendNotification(receiver, notification); // fcm 설정 후 활성화
+    }
+
+    @Transactional
+    public void sendNotification(User sender, User receiver, NotificationType notificationType, String content, Long targetId) {
+        String title = notificationType.formatTitle(sender.getName());
+
+        Notification notification = Notification.builder()
+                .receiver(receiver)
+                .targetId(targetId)
                 .notificationType(notificationType)
                 .title(title)
                 .content(content)
