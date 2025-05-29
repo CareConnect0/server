@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 public class NotificationDetailResponseDto {
     private Long notificationId;
     private NotificationType notificationType;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long dependentId;
     private String title;
     private String content;
     private boolean isRead;
@@ -25,6 +28,7 @@ public class NotificationDetailResponseDto {
         return NotificationDetailResponseDto.builder()
                 .notificationId(notification.getId())
                 .notificationType(notification.getNotificationType())
+                .dependentId(notification.getSender().getId())
                 .title(notification.getTitle())
                 .content(notification.getContent())
                 .isRead(notification.isRead())

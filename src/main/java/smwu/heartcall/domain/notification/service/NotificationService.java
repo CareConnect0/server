@@ -59,6 +59,7 @@ public class NotificationService {
 
         Notification notification = Notification.builder()
                 .receiver(receiver)
+                .sender(sender)
                 .notificationType(notificationType)
                 .title(title)
                 .content(content)
