@@ -20,6 +20,8 @@ public class Notification extends BaseTimeEntity {
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
+    private Long targetId;
+
     @Column(nullable = false)
     private String title;
 
