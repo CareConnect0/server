@@ -1,12 +1,17 @@
 services:
-  mysql:
-    image: mysql:8.0
+  app:
+    image: tichall111/heartcall:latest
+    ports:
+      - "8080:8080"
     env_file:
       - .env
-    ports:
-      - "3308:3306"
+    depends_on:
+      redis:
+        condition: service_started
     networks:
       - app-network
+    volumes:
+      - ./src/main/resources/heartcall-c0e63-firebase-adminsdk-fbsvc-d37770e367.json:/app/src/main/resources/heartcall-c0e63-firebase-adminsdk-fbsvc-d37770e367.json
   redis:
     image: redis:latest
     ports:
